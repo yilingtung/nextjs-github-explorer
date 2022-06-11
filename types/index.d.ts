@@ -51,5 +51,3 @@ export type GithubFilterType =
 export type GithubFilterSort = 'created' | 'updated' | 'pushed' | 'full_name';
 
 export type GithubFilterDirection = 'asc' | 'desc';
-
-export type UnPromisify<T> = T extends Promise<infer U> ? U : T;
