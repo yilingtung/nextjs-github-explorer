@@ -10,6 +10,8 @@ import getValidRepoFilters from '@src/utils/functions/get-valid-repo-filters';
 import useInfiniteRepos from '@src/utils/hooks/use-infinite-repos';
 import { reposKeys } from '@src/utils/query-keys';
 
+import SearchSvg from '@src/assets/icons/search.svg';
+
 import styles from '@src/styles/Home.module.css';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -79,6 +81,7 @@ const OrgPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
+      <SearchSvg />
       {reposDataPages?.pages.map(({ data }) => data.map((d) => d.name))}
       <button onClick={() => fetchNextPage()}>load more</button>
     </div>
