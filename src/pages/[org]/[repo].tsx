@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from 'react-query';
 
 import { reposKeys } from '@src/utils/query-keys';
@@ -27,14 +26,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       dehydratedState,
+      org: context.params?.org,
+      repo: context.params?.repo,
     },
   };
 };
 
-const Repo: NextPage = () => {
-  const router = useRouter();
-  const { org, repo } = router.query;
-
+const Repo: NextPage<{ org: string; repo: string }> = ({ org, repo }) => {
   return (
     <>
       <Head>
