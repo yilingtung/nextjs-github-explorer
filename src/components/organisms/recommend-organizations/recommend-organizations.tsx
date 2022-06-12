@@ -30,7 +30,11 @@ const CardGroup = () => {
         fetchRecommendOrgsError.message
       ) : (
         recommendOrgsData?.map((orgData) => (
-          <Link key={orgData.id} href={`/${orgData.login}`} passHref>
+          <Link
+            key={orgData.id}
+            href={`/${encodeURIComponent(orgData.login)}`}
+            passHref
+          >
             <a>
               <CardOrganization
                 key={orgData.id}

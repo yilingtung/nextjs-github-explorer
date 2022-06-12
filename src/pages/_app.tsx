@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         },
       })
   );
+
   const getLayout =
     Component.getLayout || ((page) => <SiteLayout>{page}</SiteLayout>);
 

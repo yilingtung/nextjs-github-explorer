@@ -46,7 +46,7 @@ export const RepoProfile = React.memo(
           {isInModal ? (
             <span>{org}</span>
           ) : (
-            <Link href={{ pathname: `/${org}` }} passHref>
+            <Link href={{ pathname: `/${encodeURIComponent(org)}` }} passHref>
               <a>{org}</a>
             </Link>
           )}

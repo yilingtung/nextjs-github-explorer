@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import Header from '@src/components/organisms/header';
 
@@ -8,7 +8,7 @@ export interface SiteLayoutProps {
   children?: React.ReactNode;
 }
 
-export const SiteLayout = ({ children }: SiteLayoutProps) => {
+export const SiteLayout = memo(({ children }: SiteLayoutProps) => {
   return (
     <S.Container>
       <Header />
@@ -17,7 +17,9 @@ export const SiteLayout = ({ children }: SiteLayoutProps) => {
       </S.Content>
     </S.Container>
   );
-};
+});
+
+SiteLayout.displayName = 'SiteLayout';
 
 export const getLayout = (page: React.ReactNode) => (
   <SiteLayout>{page}</SiteLayout>
