@@ -9,6 +9,7 @@ import * as S from './styles';
 
 export interface CardRepoProps {
   className?: string;
+  org?: string;
   name?: string;
   description?: string;
   stars: number;

@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useRouter } from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import getValidRepoFilters from '@src/utils/functions/get-valid-repo-filters';
 import useInfiniteRepos from '@src/utils/hooks/use-infinite-repos';
-import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
+import type { CardRepoProps } from '@src/components/molecules/card-repo';
 import RepoList from '@src/components/molecules/repo-list';
 import RepoListGrid from '@src/components/molecules/repo-list-grid';
 import HintText from '@src/components/atoms/hint-text';
@@ -22,8 +22,10 @@ export const ReposContainer = React.memo(
   ({ className, isGrid = false }: ReposContainerProps) => {
     const router = useRouter();
     const { org } = router.query;
-    const queries = useNextQueryParams();
-    const filters = useMemo(() => getValidRepoFilters(queries), [queries]);
+    const filters = useMemo(
+      () => getValidRepoFilters(router.query),
+      [router.query]
+    );
 
     const {
       status: fetchReposStatus,
@@ -44,20 +46,12 @@ export const ReposContainer = React.memo(
 
     const formattedRepos = useMemo(() => {
       if (!reposDataPages) return undefined;
-      const flatArray = (
-        [] as {
-          id: number;
-          name: string;
-          description: string;
-          stars: number;
-          language: string;
-          githubUrl: string;
-        }[]
-      ).concat(
+      const flatArray = ([] as CardRepoProps[]).concat(
         ...reposDataPages.pages.map((page) =>
           page.data.map((d) => ({
             id: d.id,
             name: d.name,
+            org: org as string,
             description: d.description,
             stars: d.stargazers_count,
             language: d.language,
@@ -66,18 +60,19 @@ export const ReposContainer = React.memo(
         )
       );
       return flatArray;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reposDataPages]);
 
-    const handleClickRepo = useCallback(
-      (repoName: string) => {
-        router.push(
-          { pathname: `/${org}/${repoName}` }
-          //  { state: { modal: true } }
-        );
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [org]
-    );
+    // const handleClickRepo = useCallback(
+    //   (repoName: string) => {
+    //     router.push(
+    //       { pathname: `/${org}/${repoName}` }
+    //       //  { state: { modal: true } }
+    //     );
+    //   },
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   [org]
+    // );
 
     return (
       <S.Container className={className}>
@@ -94,7 +89,7 @@ export const ReposContainer = React.memo(
                 fetchNextPage={() => {
                   fetchNextPage();
                 }}
-                onClickRepo={handleClickRepo}
+                // onClickRepo={handleClickRepo}
               />
             ) : (
               <RepoList
@@ -107,7 +102,7 @@ export const ReposContainer = React.memo(
                 fetchNextPage={() => {
                   fetchNextPage();
                 }}
-                onClickRepo={handleClickRepo}
+                // onClickRepo={handleClickRepo}
               />
             )
           }

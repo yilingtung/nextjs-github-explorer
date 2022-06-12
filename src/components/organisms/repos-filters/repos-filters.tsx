@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 
 import { filterTypes, filterSorts, filterDirections } from '@src/utils/filters';
 import capitalizeFirstLetter from '@src/utils/functions/capitalize-first-letter';
-import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
 import Dropdown from '@src/components/molecules/dropdown';
 
@@ -31,7 +30,7 @@ export interface ReposFiltersProps {
 export const ReposFilters = React.memo(
   React.forwardRef<HTMLDivElement, ReposFiltersProps>(({ className }, ref) => {
     const router = useRouter();
-    const queries = useNextQueryParams();
+    const queries = router.query;
 
     return (
       <S.Container ref={ref} className={className}>

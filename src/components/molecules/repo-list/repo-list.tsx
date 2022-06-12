@@ -1,4 +1,5 @@
 import { useCallback, useRef, memo } from 'react';
+import Link from 'next/link';
 import {
   VariableSizeList,
   VariableSizeListProps,
@@ -38,8 +39,8 @@ export const RepoList = memo(
     hasNextPage = false,
     isFetchingNextPage = false,
     fetchNextPage,
-    onClickRepo = () => undefined,
-  }: RepoListProps) => {
+  }: // onClickRepo = () => undefined,
+  RepoListProps) => {
     const itemCount = data.length;
     const isEmpty = data.length <= 0;
     const isInitialLoading = isFetchingNextPage && isEmpty;
@@ -102,14 +103,21 @@ export const RepoList = memo(
             {!repo ? (
               <CardRepoSkeleton />
             ) : (
-              <CardRepo
-                name={repo.name}
-                description={repo.description}
-                githubUrl={repo.githubUrl}
-                language={repo.language}
-                stars={repo.stars}
-                onClick={() => onClickRepo(repo.name as string)}
-              />
+              <Link
+                key={index}
+                href={`/${repo.org}?repoName=${repo.name}`}
+                as={`/${repo.org}/${repo.name}`}
+              >
+                <a>
+                  <CardRepo
+                    name={repo.name}
+                    description={repo.description}
+                    githubUrl={repo.githubUrl}
+                    language={repo.language}
+                    stars={repo.stars}
+                  />
+                </a>
+              </Link>
             )}
           </S.ItemWrapper>
         );

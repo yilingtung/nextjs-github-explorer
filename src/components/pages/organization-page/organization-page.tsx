@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 
 import useElementOnScreen from '@src/utils/hooks/use-element-on-screen';
 import useOrganization from '@src/utils/hooks/use-organization';
@@ -13,14 +14,21 @@ import OrgProfile, {
 } from '@src/components/molecules/org-profile';
 import ReposContainer from '@src/components/organisms/repos-container';
 import ReposFilters from '@src/components/organisms/repos-filters';
+import Loading from '@src/components/atoms/loading';
 
 import GridSvg from '@src/assets/icons/grid.svg';
 import RowsSvg from '@src/assets/icons/rows.svg';
 
 import * as S from './styles';
 
-// const Modal = lazy(() => import('@src/components/atoms/modal'));
-// const RepoPage = lazy(() => import('@src/components/pages/repo-page'));
+const DynamicModal = dynamic(() => import('@src/components/atoms/modal'));
+
+const DynamicRepoPage = dynamic(
+  () => import('@src/components/pages/repo-page'),
+  {
+    loading: () => <Loading />,
+  }
+);
 
 const MainContent = () => {
   const [isGrid, setGrid] = useState(false);
@@ -57,10 +65,7 @@ export interface OrganizationPageProps {
 
 export const OrganizationPage = ({ className }: OrganizationPageProps) => {
   const router = useRouter();
-  const { org } = router.query;
-
-  //   const location = useLocation();
-  //   const navigate = useNavigate();
+  const { org, repoName } = router.query;
 
   const {
     status: fetchOrgStatus,
@@ -102,17 +107,11 @@ export const OrganizationPage = ({ className }: OrganizationPageProps) => {
           <MainContent />
         </>
       )}
-      {/* {(location?.state as { modal?: boolean })?.modal && (
-        <Suspense>
-          <Modal
-            onDeactive={() => {
-              navigate(-1);
-            }}
-          >
-            <RepoPage isInModal repoName={location.pathname.split('/')[2]} />
-          </Modal>
-        </Suspense>
-      )} */}
+      {repoName && (
+        <DynamicModal onDeactive={() => router.back()}>
+          <DynamicRepoPage isInModal repoName={repoName as string} />
+        </DynamicModal>
+      )}
     </S.Container>
   );
 };

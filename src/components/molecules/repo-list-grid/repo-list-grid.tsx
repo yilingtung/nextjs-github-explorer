@@ -1,4 +1,5 @@
 import { useCallback, useRef, memo } from 'react';
+import Link from 'next/link';
 import { FixedSizeGrid, FixedSizeGridProps, areEqual } from 'react-window';
 import { ReactWindowScroller } from 'react-window-scroller';
 
@@ -32,7 +33,6 @@ export const RepoListGrid = memo(
     hasNextPage = false,
     isFetchingNextPage = false,
     fetchNextPage,
-    onClickRepo = () => undefined,
   }: RepoListGridProps) => {
     const itemCount = data.length;
     const isEmpty = data.length <= 0;
@@ -92,14 +92,21 @@ export const RepoListGrid = memo(
             {!repo && isFetchingNextPage ? (
               <CardRepoSkeleton />
             ) : !repo ? null : (
-              <CardRepo
-                name={repo.name}
-                description={repo.description}
-                githubUrl={repo.githubUrl}
-                language={repo.language}
-                stars={repo.stars}
-                onClick={() => onClickRepo(repo.name as string)}
-              />
+              <Link
+                key={index}
+                href={`/${repo.org}?repoName=${repo.name}`}
+                as={`/${repo.org}/${repo.name}`}
+              >
+                <a>
+                  <CardRepo
+                    name={repo.name}
+                    description={repo.description}
+                    githubUrl={repo.githubUrl}
+                    language={repo.language}
+                    stars={repo.stars}
+                  />
+                </a>
+              </Link>
             )}
           </S.ItemWrapper>
         );
