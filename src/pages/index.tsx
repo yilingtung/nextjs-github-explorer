@@ -1,16 +1,28 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
-import HomePage from '@src/components/pages/home-page';
+const DynamicHomePage = dynamic(
+  () => import('@src/components/pages/home-page')
+);
+const DynamicOrganizationPage = dynamic(
+  () => import('@src/components/pages/organization-page')
+);
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const { org } = router.query;
+
   return (
     <>
       <Head>
         <title>Github Repo</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <HomePage />
+      {router.isReady && (
+        <>{org ? <DynamicOrganizationPage /> : <DynamicHomePage />}</>
+      )}
     </>
   );
 };

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import useDebounce from '@src/utils/hooks/use-debounce';
 import useSimpleOrganizations from '@src/utils/hooks/use-simple-organizations';
+import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
 import SelectList from '@src/components/atoms/select-list';
 import SelectOption from '@src/components/atoms/select-option';
@@ -21,6 +22,7 @@ export const OrganizationInputSearch = ({
   className,
 }: OrganizationInputSearchProps) => {
   const router = useRouter();
+  const queries = useNextQueryParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState('');
   const debounceInputValue = useDebounce(inputValue, INPUT_DEBOUNCE);
@@ -50,10 +52,20 @@ export const OrganizationInputSearch = ({
 
   const navigateToOrganization = useCallback(
     (name: string) => {
-      router.push(`/${name}`);
+      const { org, ...rest } = {
+        ...queries,
+        org: name,
+      };
+      router.push({
+        pathname: '/',
+        query: {
+          ...rest,
+          ...(!!name && { org }),
+        },
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [queries]
   );
 
   const handleSumbit = useCallback(() => {

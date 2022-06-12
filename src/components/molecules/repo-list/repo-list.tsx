@@ -10,6 +10,7 @@ import { ReactWindowScroller } from 'react-window-scroller';
 import { CARD_REPO_HEIGHT } from '@src/utils/constants';
 import { device } from '@src/utils/media';
 import useMediaQuery from '@src/utils/hooks/use-media-query';
+import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
 import CardRepo, {
   CardRepoSkeleton,
@@ -41,6 +42,7 @@ export const RepoList = memo(
     fetchNextPage,
   }: // onClickRepo = () => undefined,
   RepoListProps) => {
+    const queries = useNextQueryParams();
     const itemCount = data.length;
     const isEmpty = data.length <= 0;
     const isInitialLoading = isFetchingNextPage && isEmpty;
@@ -105,8 +107,11 @@ export const RepoList = memo(
             ) : (
               <Link
                 key={index}
-                href={`/${repo.org}?repoName=${repo.name}`}
+                href={{
+                  query: { ...queries, org: repo.org, repo: repo.name },
+                }}
                 as={`/${repo.org}/${repo.name}`}
+                scroll={false}
               >
                 <a>
                   <CardRepo

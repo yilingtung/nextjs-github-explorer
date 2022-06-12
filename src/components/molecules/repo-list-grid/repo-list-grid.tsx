@@ -4,6 +4,7 @@ import { FixedSizeGrid, FixedSizeGridProps, areEqual } from 'react-window';
 import { ReactWindowScroller } from 'react-window-scroller';
 
 import { CARD_REPO_HEIGHT, GRID_COLUMN_COUNT } from '@src/utils/constants';
+import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
 import CardRepo, {
   CardRepoSkeleton,
@@ -34,6 +35,7 @@ export const RepoListGrid = memo(
     isFetchingNextPage = false,
     fetchNextPage,
   }: RepoListGridProps) => {
+    const queries = useNextQueryParams();
     const itemCount = data.length;
     const isEmpty = data.length <= 0;
     const isInitialLoading = isFetchingNextPage && isEmpty;
@@ -94,8 +96,11 @@ export const RepoListGrid = memo(
             ) : !repo ? null : (
               <Link
                 key={index}
-                href={`/${repo.org}?repoName=${repo.name}`}
+                href={{
+                  query: { ...queries, org: repo.org, repo: repo.name },
+                }}
                 as={`/${repo.org}/${repo.name}`}
+                scroll={false}
               >
                 <a>
                   <CardRepo

@@ -65,7 +65,7 @@ export interface OrganizationPageProps {
 
 export const OrganizationPage = ({ className }: OrganizationPageProps) => {
   const router = useRouter();
-  const { org, repoName } = router.query;
+  const { org, repo } = router.query;
 
   const {
     status: fetchOrgStatus,
@@ -107,9 +107,9 @@ export const OrganizationPage = ({ className }: OrganizationPageProps) => {
           <MainContent />
         </>
       )}
-      {repoName && (
+      {repo && org && (
         <DynamicModal onDeactive={() => router.back()}>
-          <DynamicRepoPage isInModal repoName={repoName as string} />
+          <DynamicRepoPage isInModal repoName={repo as string} />
         </DynamicModal>
       )}
     </S.Container>

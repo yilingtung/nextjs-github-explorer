@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import useRecommendSimpleOrganizations from '@src/utils/hooks/use-recommend-simple-organizations';
 import CardOrganization, {
@@ -9,6 +10,9 @@ import CardOrganization, {
 import * as S from './styles';
 
 const CardGroup = () => {
+  const router = useRouter();
+  const queries = router.query;
+
   const {
     status: fetchRecommendOrgsStatus,
     data: recommendOrgsData,
@@ -32,7 +36,12 @@ const CardGroup = () => {
         recommendOrgsData?.map((orgData) => (
           <Link
             key={orgData.id}
-            href={`/${encodeURIComponent(orgData.login)}`}
+            href={{
+              query: {
+                ...queries,
+                org: orgData.login,
+              },
+            }}
             passHref
           >
             <a>
