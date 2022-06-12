@@ -2,26 +2,15 @@ import React from 'react';
 import { useRouter } from 'next/router';
 
 import { filterTypes, filterSorts, filterDirections } from '@src/utils/filters';
-import capitalizeFirstLetter from '@src/utils/functions/capitalize-first-letter';
+import getCapitalizeFilterOptions from '@src/utils/functions/get-capitalize-filter-options';
 
 import Dropdown from '@src/components/molecules/dropdown';
 
 import * as S from './styles';
 
-const typeOptions = filterTypes.map((type) => ({
-  label: capitalizeFirstLetter(type),
-  value: type,
-}));
-
-const sortOptions = filterSorts.map((type) => ({
-  label: capitalizeFirstLetter(type),
-  value: type,
-}));
-
-const directionOptions = filterDirections.map((type) => ({
-  label: capitalizeFirstLetter(type),
-  value: type,
-}));
+const typeOptions = getCapitalizeFilterOptions(filterTypes);
+const sortOptions = getCapitalizeFilterOptions(filterSorts);
+const directionOptions = getCapitalizeFilterOptions(filterDirections);
 
 export interface ReposFiltersProps {
   className?: string;
