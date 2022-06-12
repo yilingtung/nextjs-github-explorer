@@ -13,7 +13,7 @@ export const HomePage = ({ className }: HomePageProps) => {
   return (
     <S.Container className={className}>
       <S.BannerContainer>
-        <S.BannerImg src="/banner.png" alt="banner" loading="lazy" />
+        <S.BannerImg src="/banner.png" alt="banner" />
         {!isTablet && <S.BannerInput />}
       </S.BannerContainer>
       <S.RecommendOrganizations />
