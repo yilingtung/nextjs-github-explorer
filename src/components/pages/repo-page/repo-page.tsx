@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
 import useReadme from '@src/utils/hooks/use-readme';
@@ -13,7 +13,17 @@ import RepoProfile, {
 
 import * as S from './styles';
 
-const Readme = lazy(() => import('@src/components/molecules/readme'));
+const DynamicReadme = dynamic(
+  () => import('@src/components/molecules/readme'),
+  {
+    ssr: false,
+    loading: () => (
+      <Box>
+        <Loading />
+      </Box>
+    ),
+  }
+);
 
 export interface RepoPageProps {
   className?: string;
@@ -60,17 +70,7 @@ export const RepoPage = ({
             topics={repoData.topics}
             isInModal={isInModal}
           />
-          {readmeData && (
-            <Suspense
-              fallback={
-                <Box>
-                  <Loading />
-                </Box>
-              }
-            >
-              <Readme content={readmeData} />
-            </Suspense>
-          )}
+          {readmeData && <DynamicReadme content={readmeData} />}
         </>
       ) : (
         <>
