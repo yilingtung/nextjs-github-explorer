@@ -14,7 +14,7 @@
 ## Intro
 
 This project was bootstrapped with [Next.js](https://nextjs.org/).<br>
-Similar to [Github Explorer](https://yilingtung.github.io/github-explorer/) but with more implementation of server side rendering.
+Similar to [Github Explorer](https://github.com/yilingtung/github-explorer) but with more implementation of server side rendering.
 
 ## Demo
 
@@ -35,16 +35,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Features
 
-In addition to the features of [original features](https://github.com/yilingtung/github-explorer#features), here also have 👇🏻👇🏻👇🏻
+In addition to the features of [original features](https://github.com/yilingtung/github-explorer#features), here also have...
 
 ### Server Side Rendering
 
 In order to make repo page have better SEO and latest data. I use SSR to generate repo page.<br>
-If you enter the repo page from the list view, it will be opened by the [modal route](https://github.com/yilingtung/github-explorer#route-as-modal) which is client side rendering. The user experience will not be interrupted by a short request time for switching ssr pages.
 
 <p align="start">
    <img src="/images/ssr.jpg" width="600" >
 </p>
+
+> If you enter the repo page from the list view, it will be opened by the [modal route](https://github.com/yilingtung/github-explorer#route-as-modal) which is client side rendering. The user experience will not be interrupted by a short request time for switching ssr pages. 👏🏻
 
 ### Hydrate the QueryClient 💦
 
