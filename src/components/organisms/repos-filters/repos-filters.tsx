@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { filterTypes, filterSorts, filterDirections } from '@src/utils/filters';
 import capitalizeFirstLetter from '@src/utils/functions/capitalize-first-letter';
+import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
 import Dropdown from '@src/components/molecules/dropdown';
 
@@ -30,6 +31,7 @@ export interface ReposFiltersProps {
 export const ReposFilters = React.memo(
   React.forwardRef<HTMLDivElement, ReposFiltersProps>(({ className }, ref) => {
     const router = useRouter();
+    const queries = useNextQueryParams();
 
     return (
       <S.Container ref={ref} className={className}>
@@ -37,10 +39,10 @@ export const ReposFilters = React.memo(
           title="Select Type"
           placeholder="Select Type"
           list={typeOptions}
-          value={router.query.type || filterTypes[0]}
+          value={queries.type || filterTypes[0]}
           onChangeValue={(d) => {
             const { type, ...rest } = {
-              ...router.query,
+              ...queries,
               type: d,
             };
             router.push({
@@ -55,10 +57,10 @@ export const ReposFilters = React.memo(
           title="Select Order"
           placeholder="Select Order"
           list={sortOptions}
-          value={router.query.sort || filterSorts[0]}
+          value={queries.sort || filterSorts[0]}
           onChangeValue={(d) => {
             const { sort, ...rest } = {
-              ...router.query,
+              ...queries,
               sort: d,
             };
             router.push({
@@ -73,10 +75,10 @@ export const ReposFilters = React.memo(
           title="Select Direction"
           placeholder="Select Direction"
           list={directionOptions}
-          value={router.query.direction || filterDirections[0]}
+          value={queries.direction || filterDirections[0]}
           onChangeValue={(d) => {
             const { direction, ...rest } = {
-              ...router.query,
+              ...queries,
               direction: d,
             };
             router.push({

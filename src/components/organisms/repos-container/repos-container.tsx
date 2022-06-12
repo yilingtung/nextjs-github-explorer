@@ -4,6 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 import getValidRepoFilters from '@src/utils/functions/get-valid-repo-filters';
 import useInfiniteRepos from '@src/utils/hooks/use-infinite-repos';
+import useNextQueryParams from '@src/utils/hooks/use-next-query-params';
 
 import RepoList from '@src/components/molecules/repo-list';
 import RepoListGrid from '@src/components/molecules/repo-list-grid';
@@ -21,11 +22,8 @@ export const ReposContainer = React.memo(
   ({ className, isGrid = false }: ReposContainerProps) => {
     const router = useRouter();
     const { org } = router.query;
-
-    const filters = useMemo(
-      () => getValidRepoFilters(router.query),
-      [router.query]
-    );
+    const queries = useNextQueryParams();
+    const filters = useMemo(() => getValidRepoFilters(queries), [queries]);
 
     const {
       status: fetchReposStatus,
@@ -34,12 +32,15 @@ export const ReposContainer = React.memo(
       isFetchingNextPage,
       hasNextPage,
       fetchNextPage,
-    } = useInfiniteRepos({
-      org: org as string,
-      type: filters.type,
-      sort: filters.sort,
-      direction: filters.direction,
-    });
+    } = useInfiniteRepos(
+      {
+        org: org as string,
+        type: filters.type,
+        sort: filters.sort,
+        direction: filters.direction,
+      },
+      { enabled: !!org && router.isReady }
+    );
 
     const formattedRepos = useMemo(() => {
       if (!reposDataPages) return undefined;

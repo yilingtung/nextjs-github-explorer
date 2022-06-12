@@ -34,10 +34,7 @@ export const RepoPage = ({
     status: fetchRepoStatus,
     data: repoData,
     error: fetchRepoError,
-  } = useRepo(
-    { org: org as string, repoName: repo as string },
-    { enabled: !!true }
-  );
+  } = useRepo({ org: org as string, repoName: repo as string });
 
   const { data: readmeData } = useReadme(
     {

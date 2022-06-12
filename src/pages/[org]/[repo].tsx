@@ -1,22 +1,49 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { dehydrate, QueryClient } from 'react-query';
+
+import { reposKeys } from '@src/utils/query-keys';
+import getRepo from '@src/utils/api/get-repo';
 
 import RepoPage from '@src/components/pages/repo-page';
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const queryClient = new QueryClient();
+  const org = (context.query?.org as string) || '';
+  const repoName = (context.query?.repo as string) || '';
+
+  await queryClient.prefetchQuery(reposKeys.detail({ org, repoName }), () =>
+    getRepo({
+      org,
+      repoName,
+    })
+  );
+
+  // https://github.com/TanStack/query/issues/1458#issuecomment-788447705
+  // turn pageParams: [undefined] ->  pageParams: [null]
+  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)));
+
+  return {
+    props: {
+      dehydratedState,
+    },
+  };
+};
+
 const Repo: NextPage = () => {
   const router = useRouter();
-  const { repoName, ownerName } = router.query;
+  const { org, repo } = router.query;
 
   return (
     <>
       <Head>
         <title>
-          Github Repo | {ownerName} / {repoName}
+          Github Repo | {org} / {repo}
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <RepoPage repoName={repoName as string} />
+      <RepoPage repoName={repo as string} />
     </>
   );
 };

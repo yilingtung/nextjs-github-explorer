@@ -58,6 +58,7 @@ export interface OrganizationPageProps {
 export const OrganizationPage = ({ className }: OrganizationPageProps) => {
   const router = useRouter();
   const { org } = router.query;
+
   //   const location = useLocation();
   //   const navigate = useNavigate();
 
@@ -65,7 +66,10 @@ export const OrganizationPage = ({ className }: OrganizationPageProps) => {
     status: fetchOrgStatus,
     data: orgData,
     error: fetchOrgError,
-  } = useOrganization({ name: org as string });
+  } = useOrganization(
+    { name: org as string },
+    { enabled: !!org && router.isReady }
+  );
 
   return (
     <S.Container className={className}>
