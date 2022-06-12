@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -7,11 +8,14 @@ import useInfiniteRepos from '@src/utils/hooks/use-infinite-repos';
 
 import type { CardRepoProps } from '@src/components/molecules/card-repo';
 import RepoList from '@src/components/molecules/repo-list';
-import RepoListGrid from '@src/components/molecules/repo-list-grid';
 import HintText from '@src/components/atoms/hint-text';
 import Button from '@src/components/atoms/button';
 
 import * as S from './styles';
+
+const DynamicRepoListGrid = dynamic(
+  () => import('@src/components/molecules/repo-list-grid')
+);
 
 export interface ReposContainerProps {
   className?: string;
@@ -63,23 +67,12 @@ export const ReposContainer = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reposDataPages]);
 
-    // const handleClickRepo = useCallback(
-    //   (repoName: string) => {
-    //     router.push(
-    //       { pathname: `/${org}/${repoName}` }
-    //       //  { state: { modal: true } }
-    //     );
-    //   },
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    //   [org]
-    // );
-
     return (
       <S.Container className={className}>
         <AutoSizer disableHeight style={{ width: '100%' }}>
           {({ width }) =>
             isGrid ? (
-              <RepoListGrid
+              <DynamicRepoListGrid
                 listHeight={window.innerHeight}
                 listWidth={width}
                 data={formattedRepos || []}
@@ -89,7 +82,6 @@ export const ReposContainer = React.memo(
                 fetchNextPage={() => {
                   fetchNextPage();
                 }}
-                // onClickRepo={handleClickRepo}
               />
             ) : (
               <RepoList
@@ -102,7 +94,6 @@ export const ReposContainer = React.memo(
                 fetchNextPage={() => {
                   fetchNextPage();
                 }}
-                // onClickRepo={handleClickRepo}
               />
             )
           }

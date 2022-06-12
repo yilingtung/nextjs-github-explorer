@@ -27,7 +27,6 @@ export interface RepoListProps {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   fetchNextPage?: () => void;
-  onClickRepo?: (repoName: string) => void;
 }
 
 export const RepoList = memo(
@@ -40,8 +39,7 @@ export const RepoList = memo(
     hasNextPage = false,
     isFetchingNextPage = false,
     fetchNextPage,
-  }: // onClickRepo = () => undefined,
-  RepoListProps) => {
+  }: RepoListProps) => {
     const queries = useNextQueryParams();
     const itemCount = data.length;
     const isEmpty = data.length <= 0;

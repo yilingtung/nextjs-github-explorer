@@ -21,7 +21,6 @@ export interface RepoListGridProps {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   fetchNextPage?: () => void;
-  onClickRepo?: (repoName: string) => void;
 }
 
 export const RepoListGrid = memo(
