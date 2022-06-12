@@ -1,18 +1,14 @@
 import type { NextPage, GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
-import { dehydrate, InfiniteData, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from 'react-query';
 
-import type { GithubRepository } from '@types';
 import { filterTypes, filterSorts, filterDirections } from '@src/utils/filters';
 import getRepos from '@src/utils/api/get-repos';
 import getValidRepoFilters from '@src/utils/functions/get-valid-repo-filters';
-import useInfiniteRepos from '@src/utils/hooks/use-infinite-repos';
 import { reposKeys } from '@src/utils/query-keys';
 
-import SearchSvg from '@src/assets/icons/search.svg';
-
-import styles from '@src/styles/Home.module.css';
+import OrganizationPage from '@src/components/pages/organization-page';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
@@ -45,11 +41,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   );
 
-  const dehydratedState = dehydrate(queryClient);
-  // https://github.com/TanStack/query/issues/1528#issuecomment-751445360
-  (
-    dehydratedState.queries[0].state.data as InfiniteData<GithubRepository[]>
-  ).pageParams = [1];
+  // https://github.com/TanStack/query/issues/1458#issuecomment-788447705
+  // turn pageParams: [undefined] ->  pageParams: [null]
+  const dehydratedState = JSON.parse(JSON.stringify(dehydrate(queryClient)));
 
   return {
     props: {
@@ -60,31 +54,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const OrgPage: NextPage = () => {
   const router = useRouter();
-  const query = router.query;
-
-  const org = query.org as string;
-  const filters = useMemo(() => getValidRepoFilters(query), [query]);
-
-  const {
-    // status: fetchReposStatus,
-    data: reposDataPages,
-    // error: fetchReposError,
-    // isFetchingNextPage,
-    // hasNextPage,
-    fetchNextPage,
-  } = useInfiniteRepos({
-    org,
-    type: filters.type,
-    sort: filters.sort,
-    direction: filters.direction,
-  });
+  const { org } = router.query;
 
   return (
-    <div className={styles.container}>
-      <SearchSvg />
-      {reposDataPages?.pages.map(({ data }) => data.map((d) => d.name))}
-      <button onClick={() => fetchNextPage()}>load more</button>
-    </div>
+    <>
+      <Head>
+        <title>Github Repo | {org}</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <OrganizationPage />
+    </>
   );
 };
 
